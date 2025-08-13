@@ -1,4 +1,4 @@
-// export const prerender = false;
+export const prerender = false;
 import type { APIRoute } from "astro";
 import { supabase } from "../../../../utils/supabase";
 
@@ -6,7 +6,6 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 	const formData = await request.formData();
 	const email = formData.get("email")?.toString();
 	const password = formData.get("password")?.toString();
-
 	if (!email || !password) {
 		return new Response("Email and password are required", { status: 400 });
 	}

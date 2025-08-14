@@ -1,16 +1,41 @@
+export const prerender = false
 ---
+import Login from "../components/login.astro"
+import { supabase } from "../lib/supabase";
+import Layout from "../layouts/Main.astro"
+const accessToken = Astro.cookies.get("sb-access-token");
+const refreshToken = Astro.cookies.get("sb-refresh-token");
 
+if (!accessToken || !refreshToken) {
+  return Astro.redirect("/login");
+}
+
+let session;
+try {
+  session = await supabase.auth.setSession({
+    refresh_token: refreshToken.value,
+    access_token: accessToken.value,
+  });
+  if (session.error) {
+    Astro.cookies.delete("sb-access-token", {
+      path: "/",
+    });
+    Astro.cookies.delete("sb-refresh-token", {
+      path: "/",
+    });
+    return Astro.redirect("/login");
+  }
+} catch (error) {
+  Astro.cookies.delete("sb-access-token", {
+    path: "/",
+  });
+  Astro.cookies.delete("sb-refresh-token", {
+    path: "/",
+  });
+  return Astro.redirect("/login");
+}
+
+const email = session.data.user?.email;
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout>
+  </Layout>

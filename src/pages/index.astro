@@ -1,9 +1,8 @@
 export const prerender = false
 ---
-import "../assets/app.css"
 import Login from "../components/login.astro"
 import { supabase } from "../lib/supabase";
-
+import Layout from "../layouts/Main.astro"
 const accessToken = Astro.cookies.get("sb-access-token");
 const refreshToken = Astro.cookies.get("sb-refresh-token");
 
@@ -38,17 +37,5 @@ try {
 
 const email = session.data.user?.email;
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body "h-screen">
-	  <div class="flex justify-center items-center h-screen">
-	  </div>
-	</body>
-</html>
+<Layout>
+  </Layout>
